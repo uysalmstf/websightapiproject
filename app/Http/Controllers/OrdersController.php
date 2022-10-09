@@ -56,6 +56,16 @@ class OrdersController extends Controller
 
     public function edit(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'address' => 'required|string|between:2,100',
+            'quantity' => 'required|integer',
+            'product_id' => 'required|integer',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
         if (auth()->user()['user_role'] != 1) {
             return response()->json([
                 'message' => 'User Role is not right access',
